@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.name }}{% endblock  %}
+
+{% block content %}
+    <div class="row p-3 rounded" style="background-color: rgb(248,248,248)">
+        <h3 class="mb-3 text-center">Item Details</h3>
+        <div class="col-md-6 me-2" style="">
+            <img src="{{ item.image.url }}" class="img-fluid w-100 h-auto rounded" alt="">
+        </div>
+
+        <div class="col bg-white p-5 d-flex flex-column">
+            <h1 class="fw-bold"><strong>{{ item.name }}</strong></h1><br>
+            <h4 class="text-muted"><strong>Price: </strong>{{ item.price }}</h4>
+            <h4 class="text-muted"><strong>Seller: </strong>{{ item.created_by }}</h4>
+            
+            {% if item.description %}
+                <h4 class="text-muted"><strong>Description: </strong>{{ item.description }}</h4>
+            {% endif %}
+            
+            <div class="mt-auto">
+                <a href="#" class="btn btn-success btn-lg">Contact Seller</a> 
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4 bg-white w-100 p-5">
+        <h3 class="mb-3 text-center">Related Items</h3>
+        <div class="row">
+            {% for related_item in related_items %}
+                <div class="col-md-3">
+                    <div class="card text-center shadow-sm d-flex flex-column mb-3"
+                        style="background-color: rgb(248,248,248); max-height: 250px; width: 100%;">
+                        <a href="{% url 'detail' related_item.id %}" class="flex-grow-1 d-flex align-items-center justify-content-center border" style="height: 150px;">
+                            <img src="{{ related_item.image.url }}" class="card-img-top w-100 h-100" style="object-fit: cover; max-height: 150px;" alt="{{ related_item.name }}">
+                        </a>
+                        <div class="card-body flex-grow-0 p-2">
+                            <h6 class="card-title m-0">{{ related_item.name }}</h6>
+                            <p class="card-text text-muted m-0">{{ related_item.price }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+{% endblock  %}
