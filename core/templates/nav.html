@@ -4,10 +4,16 @@
 
 
         <div>
-            <a href="#" class="navbar-link btn btn-outline-secondary">Add Item</a>
-            <a href="#" class="navbar-link btn btn-outline-secondary me-3">Browse</a>
-            
-            <a href="#" class="btn btn-success">Sign up</a>
-            <a href="#" class="btn btn-primary">Login</a>
+            {% if user.is_authenticated %}
+                <a href="{% url "new" %}" class="navbar-link p-3 rounded fw-bold text-decoration-none text-dark">Add Item</a>
+                <a href="#" class="navbar-link p-3 rounded fw-bold text-decoration-none text-dark me-3">Browse</a>
+                <a href="#" class="btn btn-success">Inbox</a>
+                <a href="{% url "dashboard" %}" class="btn btn-secondary">Dashboard</a>
+                <a href="{% url "user_logout" %}" class="btn btn-danger">Logout</a>
+            {% else %}
+                <a href="{% url "signup" %}" class="btn btn-success">Sign up</a>
+                <a href="{% url "user_login" %}" class="btn btn-primary">Login</a>
+            {% endif %}
+
         </div>
 </nav>

@@ -11,7 +11,19 @@
     {% include "nav.html" %}
 
     <div class="container flex-grow-1">
-        {% block content %}{% endblock  %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="position-fixed top-0 start-50 translate-middle-x z-3 mt-3">
+                    <div class="alert alert-warning fade show shadow-lg mt-3" role="alert" id="myAlert">
+                        {{ message }}
+                    </div>
+                </div>    
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        
+        {% endblock  %}
     </div>
 
 
@@ -29,5 +41,14 @@
             <a href="{% url "term_of_use" %}" class="fw-bold text-success" style="text-decoration: None">Term of use</a>
         </div>
     </footer>
+
+    <script>
+        setTimeout(function() {
+            let alert = document.getElementById("myAlert")
+            if(alert){
+                alert.remove()
+            }
+        }, 2000)
+    </script>
 </body>
 </html>

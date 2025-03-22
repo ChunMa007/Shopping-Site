@@ -1,11 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock  %}
+{% block title %}Dashboard{% endblock  %}
 
 {% block content %}
 <div class="container mt-4 bg-white">
     <div class="row g-4 p-3 rounded mb-5 text-center">
-        <h1 class="h3">Newest Items</h1>
+
+        <h1 class="h3">My Items</h1>
+        {% if not items %}
+            <h5>No items</h5>
+        {% endif %}
+
         {% for item in items %}
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="card h-100 text-center shadow-sm d-flex flex-column" style="background-color: rgb(248,248,248)">
@@ -19,24 +24,6 @@
                 </div>
             </div>
         {% endfor %}
-    </div>
-
-    <div class="rounded text-center p-3 mb-5 g-4">
-        <h1 class="h3 mb-3">Categories</h1>
-        <div class="row">
-            {% for category in categories %}
-                <div class="col-md-4">
-                    <a href="{% url "home" %}" class="text-decoration-none">
-                        <div class="card h-100 text-center shadow-sm" style="background-color: rgb(248,248,248)">
-                            <div class="card-body">
-                                <h1 class="h5">{{ category.name }}</h1>
-                                <p class="text-muted">{{ category.items.count }} items</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            {% endfor %}
-        </div>
     </div>
 </div>
 
