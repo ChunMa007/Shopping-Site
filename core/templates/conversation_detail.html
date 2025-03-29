@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h3>Conversation</h3>
+
+    <div class="p-3 rounded bg-white mb-3">
+        <div style="max-height: 500px; overflow-y: auto; border: 1px solid padding: 10px;">
+            {% for message in conversation.messages.all %}
+                <div class="ps-3 pb-1 pt-3 rounded mb-3 {% if message.created_by == request.user %} bg-primary-subtle {% else %} bg-white border {% endif %}">
+                    <p><strong>{{ message.created_by.username }}</strong> @ {{ message.created_at }}</p>
+                    <p>{{ message.content }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <hr>
+        <div style="">
+            <form action="." method="post">
+                {% csrf_token %}
+        
+                {{ form.as_p }}
+        
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock  %}

@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth.models import User
 from .models import Item
+from .models import ConversationMessage
 
 class SignUpForm(UserCreationForm):
     username = forms.CharField(
@@ -50,3 +51,12 @@ class EditItemForm(forms.ModelForm):
             'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'})
         }
+
+class ConversationMessageForm(forms.ModelForm):
+    class Meta:
+        model = ConversationMessage
+        fields = ('content', )
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control', 'style': 'height: 30px;'})
+        }
+        labels = {'content': ''}

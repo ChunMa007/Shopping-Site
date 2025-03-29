@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-white mt-3 p-3">
+    <form action="{% url "browse" %}" method="get" class=>
+        <div class="mb-3 mt-3 d-flex justify-content-center">
+            <input type="text" class="form-control w-50 me-2" placeholder="Search" name="search">
+            <input type="hidden" name="category" value="{{ category_id }}">
+            <div class="btn-group">
+                <button class="btn btn-success">Search</button>
+                <button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Filter</button>
+
+                <ul class="dropdown-menu">
+                    {% for category in categories %}
+                        <li>
+                            <a href="{% url "browse" %}?search={{ term }}&category={{ category.id }}" class="dropdown-item {% if category.id|stringformat:"s" == category_id %}active{% endif %}">{{ category.name }}</a>
+                        </li>
+                    {% endfor %}
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a href="{% url "browse" %}?search={{ term }}" class="dropdown-item">Reset</a></li>
+                </ul>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        {% for item in items %}
+            <div class="col-md-3 mb-3 p-3">
+                <div class="card shadow-sm" style="background-color: rgb(248,248,248)">
+                    <a href="{% url "detail" item.id %}">
+                        <img src="{{ item.image.url }}" alt="" class="card-img-top border" style="width: 100%; height: 200px; object-fit: cover;">
+                    </a>
+                    <div class="card-body">
+                        <h2 class="card-title">{{ item.name }}</h2>
+                        <p class="card-text text-muted">Price: {{ item.price }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+       
+    </div>
+</div>
+
+
+    {% comment %} <div class="row g-4 p-3 rounded mb-5 text-center">
+        <h1 class="h3">Newest Items</h1>
+        {% for item in items %}
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card h-100 text-center shadow-sm d-flex flex-column" style="background-color: rgb(248,248,248)">
+                    <a href="{% url "detail" item.id %}" class="flex-grow-1 d-flex align-items-center justify-content-center border">
+                        <img src="{{ item.image.url }}" class="card-img-top w-100 h-100" alt="{{ item.name }}">
+                    </a>
+                    <div class="card-body flex-grow-0">
+                        <h2 class="cart-title">{{ item.name }}</h2>
+                        <p class="card-text text-muted">Price: {{ item.price }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div> {% endcomment %}
+{% endblock  %}

@@ -26,7 +26,7 @@
                 </div>
             {% else %}
                 <div class="mt-auto">
-                    <a href="#" class="btn btn-success btn-lg">Contact Seller</a> 
+                    <a href="{% url "new" item.id %}" class="btn btn-success btn-lg">Contact Seller</a> 
                 </div>
             {% endif %}
         </div>

@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from .models import Category, Item
-from .forms import SignUpForm, NewItemForm, EditItemForm
+from .models import Category, Item, Conversation
+from .forms import SignUpForm, NewItemForm, EditItemForm, ConversationMessageForm
 from django.contrib import messages
+from django.db.models import Q
+
 
 def getting_started(request):
     return render(request, 'getting_started.html')
@@ -115,4 +117,86 @@ def edit_item(request, pk):
     return render(request, 'form.html', {
         'form': form,
         'title': 'Edit item',
-        })
+        }) 
+    
+def browse(request):
+    term = request.GET.get('search', '')
+    category_id = request.GET.get('category', 0)
+    items = Item.objects.filter(isSold=False)
+    
+    if term:
+        items = items.filter(Q(name__icontains=term))
+    
+    if category_id:
+        items = items.filter(Q(category_id=category_id))
+
+    return render(request, 'browse.html', {
+        'items': items, 
+        'term': term,
+        'categories': Category.objects.all(),
+        'category_id': category_id})
+
+@login_required
+def new_conversation(request, item_pk):
+    item = get_object_or_404(Item, pk=item_pk)
+    
+    if item.created_by == request.user:
+        return redirect('core:dashboard')
+    
+    conversations = Conversation.objects.filter(item=item).filter(members__in=[request.user.id])
+    
+    if conversations:
+        return redirect('conversation_detail', pk=conversations.first().id)
+    
+    if request.method == 'POST':
+        form = ConversationMessageForm(request.POST)
+        
+        if form.is_valid():
+            conversation = Conversation.objects.create(item=item)
+            conversation.members.add(request.user)
+            conversation.members.add(item.created_by)
+            conversation.save()
+            
+            conversation_message = form.save(commit=False)
+            conversation_message.conversation = conversation
+            conversation_message.created_by = request.user
+            conversation_message.save()
+            
+            return redirect('detail', pk=item_pk)
+    else:
+        form = ConversationMessageForm()
+    
+    return render(request, 'new.html', {
+        'form': form,
+    })
+
+@login_required
+def inbox(request):
+    conversations = Conversation.objects.filter(members__in=[request.user.id])
+    
+    return render(request, 'inbox.html', {
+        'conversations': conversations
+    })
+
+def conversation_detail(request, pk):
+    conversation = Conversation.objects.filter(members__in=[request.user.id]).get(pk=pk)
+    
+    if request.method == "POST":
+        form = ConversationMessageForm(request.POST)
+        
+        if form.is_valid():
+            conversation_message = form.save(commit=False)
+            conversation_message.conversation = conversation
+            conversation_message.created_by = request.user
+            conversation_message.save()
+            
+            conversation.save()
+            
+            return redirect('conversation_detail', pk=pk)
+    else:
+        form = ConversationMessageForm()
+    
+    return render(request, 'conversation_detail.html', {
+        'conversation': conversation,
+        'form': form,
+    })

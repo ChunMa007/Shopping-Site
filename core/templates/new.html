@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="p-5 mt-3 w-50 mx-auto bg-white">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <div class="mt-5 d-grid">
+                <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+            </div>
+        </form>
+    </div>    
+{% endblock  %}
